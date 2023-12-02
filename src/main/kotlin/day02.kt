@@ -2,24 +2,20 @@ import java.io.Reader
 
 fun main() {
   fun parseHand(group: String) =
-    Regex("""(\d+) (\w+)""").findAll(group).map(MatchResult::groupValues).associate { (_, n, color) ->
-      color to n.toInt()
-    }
+    Regex("""(\d+) (\w+)""")
+      .findAll(group)
+      .map(MatchResult::groupValues)
+      .associate { (_, n, color) -> color to n.toInt() }
 
   fun part1(input: Reader) =
     input.useLines { lines ->
       val bag = mapOf("red" to 12, "green" to 13, "blue" to 14)
       lines.sumOf { line ->
-        val id = checkNotNull(Regex("""Game (\d+):""").find(line)).groupValues[1]
+        val id = checkNotNull(Regex("""Game (\d+):""").find(line)).groupValues[1].toInt()
         val possible = line.substringAfter(':').split(';').all { group ->
-          val hand = parseHand(group)
-          hand.all { it.value <= bag.getValue(it.key) }
+          parseHand(group).all { it.value <= bag.getValue(it.key) }
         }
-        if (possible) {
-          id.toInt()
-        } else {
-          0
-        }
+        if (possible) id else 0
       }
     }
 
@@ -34,7 +30,7 @@ fun main() {
               bag.mapValues { (color, n) -> maxOf(n, hand[color] ?: 0) }
             }
           }
-          .let { acc + it.values.fold(1, Int::times) }
+          .run { acc + values.reduce(Int::times) }
       }
     }
 
