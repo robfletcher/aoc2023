@@ -1,15 +1,18 @@
 import java.io.Reader
 
 fun main() {
+  fun parseHand(group: String) =
+    Regex("""(\d+) (\w+)""").findAll(group).map(MatchResult::groupValues).associate { (_, n, color) ->
+      color to n.toInt()
+    }
+
   fun part1(input: Reader) =
     input.useLines { lines ->
       val bag = mapOf("red" to 12, "green" to 13, "blue" to 14)
       lines.sumOf { line ->
         val id = checkNotNull(Regex("""Game (\d+):""").find(line)).groupValues[1]
         val possible = line.substringAfter(':').split(';').all { group ->
-          val hand = Regex("""(\d+) (\w+)""").findAll(group).map(MatchResult::groupValues).associate { (_, n, color) ->
-            color to n.toInt()
-          }
+          val hand = parseHand(group)
           hand.all { it.value <= bag.getValue(it.key) }
         }
         if (possible) {
@@ -17,6 +20,21 @@ fun main() {
         } else {
           0
         }
+      }
+    }
+
+  fun part2(input: Reader) =
+    input.useLines { lines ->
+      lines.fold(0) { acc, line ->
+        line
+          .substringAfter(':')
+          .split(';')
+          .fold(mapOf("red" to 0, "green" to 0, "blue" to 0)) { bag, group ->
+            parseHand(group).let { hand ->
+              bag.mapValues { (color, n) -> maxOf(n, hand[color] ?: 0) }
+            }
+          }
+          .let { acc + it.values.fold(1, Int::times) }
       }
     }
 
@@ -28,6 +46,8 @@ fun main() {
     Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green""".trimIndent()
 
   assert(part1(testInput.reader()) == 8)
+  assert(part2(testInput.reader()) == 2286)
 
   execute("day02", "Part 1", ::part1)
+  execute("day02", "Part 2", ::part2)
 }
