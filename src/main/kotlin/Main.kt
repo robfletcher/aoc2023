@@ -14,7 +14,7 @@ private fun execute(n: Int) {
   puzzle(n).apply {
     println("Day $n")
     test()
-    listOf(Puzzle<*>::part1, Puzzle<*>::part2).forEach { function ->
+    listOf(Puzzle::part1, Puzzle::part2).forEach { function ->
       execute(function, n).apply { println("Part ${function.name.takeLast(1)}: $output") }
     }
     println()
@@ -22,10 +22,10 @@ private fun execute(n: Int) {
 }
 
 @Suppress("UNCHECKED_CAST")
-private fun puzzle(n: Int): Puzzle<*> =
-  (Class.forName("Day${n.padded}") as Class<Puzzle<*>>).getDeclaredConstructor().newInstance()
+private fun puzzle(n: Int): Puzzle =
+  (Class.forName("Day${n.padded}") as Class<Puzzle>).getDeclaredConstructor().newInstance()
 
-private fun Puzzle<*>.execute(function: Puzzle<*>.(Sequence<String>) -> Any?, day: Int) =
+private fun Puzzle.execute(function: Puzzle.(Sequence<String>) -> Any?, day: Int) =
   readInput("day${day.padded}").useLines { measureTimedValue { function.invoke(this, it) } }
 
 private fun readInput(name: String) =

@@ -1,4 +1,4 @@
-class Day01 : Puzzle<Int> {
+class Day01 : Puzzle {
   override fun test() {
     val testInput1 = """
     1abc2

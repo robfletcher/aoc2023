@@ -1,5 +1,5 @@
-interface Puzzle<RESULT> {
+interface Puzzle {
   fun test()
-  fun part1(input: Sequence<String>): RESULT = TODO()
-  fun part2(input: Sequence<String>): RESULT = TODO()
+  fun part1(input: Sequence<String>): Any = TODO()
+  fun part2(input: Sequence<String>): Any = TODO()
 }

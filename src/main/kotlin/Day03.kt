@@ -1,7 +1,7 @@
 import kotlin.math.max
 import kotlin.math.min
 
-class Day03 : Puzzle<Int> {
+class Day03 : Puzzle {
   override fun test() {
     val input = """
       467..114..
